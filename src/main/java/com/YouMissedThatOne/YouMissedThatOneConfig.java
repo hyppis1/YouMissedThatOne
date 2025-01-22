@@ -10,7 +10,7 @@ public interface YouMissedThatOneConfig extends Config
 	@ConfigItem(
 			keyName = "EnableOverlay",
 			name = "Show ID overlay",
-			description = "Shows held weapon item ID, current animation ID and sound effect ID in overlay",
+			description = "Shows held weapon item ID and current animation ID",
 			position = 1
 	)
 	default boolean EnableOverLay()
@@ -64,13 +64,6 @@ public interface YouMissedThatOneConfig extends Config
 	)
 	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
 
-	@ConfigSection(
-			name = "Mute sounds",
-			description = "Settings for muting sounds",
-			position = 7
-	)
-	String MUTE_SOUNDS_SECTION = "MuteSounds";
-
 	@ConfigItem(
 			keyName = "SpecialAttackSounds",
 			name = "Special attack sound effects",
@@ -118,31 +111,6 @@ public interface YouMissedThatOneConfig extends Config
 			section = NORMAL_ATTACKS_SECTION
 	)
 	default String UserSelectedNormalSounds()
-	{
-		return "";
-	}
-
-	@ConfigItem(
-			keyName = "MuteSounds",
-			name = "Mute default sound",
-			description = "Mute default sounds by sound ID",
-			position = 1,
-			section = MUTE_SOUNDS_SECTION
-	)
-	default boolean RemoveSounds()
-	{
-		return false;
-	}
-
-	@ConfigItem(
-			keyName = "MutedSounds",
-			name = "Muted default Sounds",
-			description = "Insert a default sound ID you want to mute" +
-					"<br/> Separate ID's with comma. For example. \"1569, 1640\"",
-			position = 2,
-			section = MUTE_SOUNDS_SECTION
-	)
-	default String UserSelectedMutedSounds()
 	{
 		return "";
 	}

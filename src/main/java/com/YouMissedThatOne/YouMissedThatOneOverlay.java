@@ -46,10 +46,6 @@ public class YouMissedThatOneOverlay extends OverlayPanel
                 .left("Animation ID: ")
                 .right(String.valueOf(plugin.PlayingAnimationID))
                 .build());
-        panelComponent.getChildren().add(LineComponent.builder()
-                .left("Sound ID: ")
-                .right(String.valueOf(plugin.DefaultSoundID))
-                .build());
         return super.render(graphics);
     }
 }

@@ -58,11 +58,9 @@ public class YouMissedThatOnePlugin extends Plugin
 	public int PlayingAnimationID;
 	public int WasAnimationID = -1;
 	public int Volume;
-	public int DefaultSoundID;
 	public int CustomSoundID;
 	public String UserData;
 	List<Integer> TwoTickWeaponList = new ArrayList<Integer>();
-	List<Integer> MutedSoundList = new ArrayList<Integer>();
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
 	public List<UserWeaponData> NormalWeaponList = new ArrayList<>();
 	Random NextRandom = new Random();
@@ -85,13 +83,6 @@ public class YouMissedThatOnePlugin extends Plugin
 		}
 
 		Volume = config.SoundSwapVolume();
-
-		UserData = config.UserSelectedMutedSounds();
-		if (!UserData.isEmpty())
-		{
-			MutedSoundList.clear();
-			MutedSoundList = parseMutedSounds(UserData);
-		}
 
 		TwoTickWeaponListMaker();
 
@@ -347,19 +338,6 @@ public class YouMissedThatOnePlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onSoundEffectPlayed(SoundEffectPlayed event)
-	{
-		DefaultSoundID = event.getSoundId();
-		if (config.RemoveSounds())
-		{
-			if (MutedSoundList.contains(DefaultSoundID))
-			{
-				event.consume();
-			}
-		}
-	}
-
-	@Subscribe
 	public void	onConfigChanged(ConfigChanged event)
 	{
 		switch (event.getKey())
@@ -383,15 +361,6 @@ public class YouMissedThatOnePlugin extends Plugin
 					NormalWeaponList = parseWeaponData(UserData);
 				}
 				break;
-			}
-			case "MutedSounds":
-			{
-				UserData = config.UserSelectedMutedSounds();
-				if (!UserData.isEmpty())
-				{
-					MutedSoundList.clear();
-					MutedSoundList = parseMutedSounds(UserData);
-				}
 			}
 			case "SoundSwapVolume":
 			{
@@ -491,27 +460,6 @@ public class YouMissedThatOnePlugin extends Plugin
 				client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", message, null)
 		);
 	}
-
-	private List<Integer> parseMutedSounds(String input)
-	{
-		List<Integer> SoundList = new ArrayList<>();
-
-		String[] soundIdStrings = input.split(",");
-		for (String entry : soundIdStrings)
-		{
-			try
-			{
-				int soundId = Integer.parseInt(entry.trim());
-				SoundList.add(soundId);
-			}
-			catch (NumberFormatException e)
-			{
-				sendGameMessage("Failed to parse muted sounds entry \"" + entry + "\" Please check your input.");
-			}
-		}
-		return SoundList;
-	}
-
 
 	public static class UserWeaponData
 	{
