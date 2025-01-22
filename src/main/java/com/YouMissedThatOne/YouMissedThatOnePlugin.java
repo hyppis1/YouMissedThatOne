@@ -104,7 +104,7 @@ public class YouMissedThatOnePlugin extends Plugin
 		}
 		catch (SecurityException securityException)
 		{
-			System.out.println("Error creating directory");
+			log.error("Error creating directory");
 		}
 
 		overlayManager.add(youMissedThatOneOverlay);
@@ -611,7 +611,7 @@ public class YouMissedThatOnePlugin extends Plugin
 		}
 		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
 		{
-			System.out.println("Error playing custom sound: " + e.getMessage());
+			log.error("Error playing custom sound: {}", e.getMessage());
 		}
 	}
 
