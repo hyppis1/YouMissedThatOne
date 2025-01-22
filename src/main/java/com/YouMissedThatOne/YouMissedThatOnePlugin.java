@@ -40,7 +40,6 @@ public class YouMissedThatOnePlugin extends Plugin
 	private YouMissedThatOneConfig config;
 	@Inject
 	private OverlayManager overlayManager;
-
 	@Inject
 	private ItemManager itemManager;
 
@@ -244,7 +243,6 @@ public class YouMissedThatOnePlugin extends Plugin
 									else
 									{
 										client.playSoundEffect(CustomSoundID);
-										// System.out.println("Sound file not found: " + soundFile.getAbsolutePath());
 									}
 								}
 								else
@@ -276,7 +274,6 @@ public class YouMissedThatOnePlugin extends Plugin
 									else
 									{
 										client.playSoundEffect(CustomSoundID);
-										// System.out.println("Sound file not found: " + soundFile.getAbsolutePath());
 									}
 								}
 								else
@@ -406,6 +403,8 @@ public class YouMissedThatOnePlugin extends Plugin
 
 	public void TwoTickWeaponListMaker()
 	{
+		// this is just easy way to make list of all 2 tick weapons which can cause problems on the plugin
+
 		// Knives
 		TwoTickWeaponList.add(ItemID.BRONZE_KNIFE);
 		TwoTickWeaponList.add(ItemID.BRONZE_KNIFEP);
