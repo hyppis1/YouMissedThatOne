@@ -42,25 +42,36 @@ public interface YouMissedThatOneConfig extends Config
 	default int SoundSwapVolume() { return 50; }
 
 	@ConfigItem(
-			keyName = "EnableRandomizer",
-			name = "Enable sound randomizer",
-			description = "Plays random sound effects for the weapons you have selected." +
-					"<br/> If sound swap is enabled, those sounds can also play if the ID is randomly selected",
+			keyName = "RandomizerOnHit",
+			name = "Randomize sound on hit",
+			description = "Plays random sound effects on hit for the selected weapons." +
+					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected" +
+					"<br/> The randomized sound ID is chosen within the range of 0–10,000.",
 			position = 4
 	)
-	default boolean EnableRandomizer() { return false; }
+	default boolean RandomizerOnHit() { return false; }
+
+	@ConfigItem(
+			keyName = "RandomizerOnMiss",
+			name = "Randomize sound on miss",
+			description = "Plays random sound effects on miss for the selected weapons." +
+					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected" +
+					"<br/> The randomized sound ID is chosen within the range of 0–10,000.",
+			position = 4
+	)
+	default boolean RandomizerOnMiss() { return false; }
 
 	@ConfigSection(
 			name = "Special attacks",
 			description = "Settings for special attacks",
-			position = 5
+			position = 6
 	)
 	String SPECIAL_ATTACKS_SECTION = "SpecialAttackSounds";
 
 	@ConfigSection(
 			name = "Normal attacks",
 			description = "Settings for normal attacks",
-			position = 6
+			position = 7
 	)
 	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
 

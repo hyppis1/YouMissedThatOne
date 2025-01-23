@@ -112,6 +112,37 @@ public class YouMissedThatOnePlugin extends Plugin
 	{
 		Client client = this.client;
 
+		// get currently equipped weaponID
+		ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
+		if (equipment != null)
+		{
+			int SlotIdx = EquipmentInventorySlot.WEAPON.getSlotIdx();
+			Item slotItem = equipment.getItem(SlotIdx);
+			if (slotItem != null)
+			{
+				HeldWeaponID = slotItem.getId();
+			}
+			else
+			{
+				HeldWeaponID = -1;
+			}
+
+			// check if the weapon was same as last tick, less time used to check if its 2 tick weapon or not
+			if (HeldWeaponID != WasHeldWeaponID)
+			{
+				WasHeldWeaponID = HeldWeaponID;
+
+				if (TwoTickWeaponList.contains(HeldWeaponID))
+				{
+					TwoTickFix = true;
+				}
+				else
+				{
+					TwoTickFix = false;
+				}
+			}
+		}
+
 		// If using 2 tick weapon, use this scuffed "fix" to bypass animation length problem
 		if (TwoTickFix)
 		{
@@ -141,7 +172,7 @@ public class YouMissedThatOnePlugin extends Plugin
 						{
 							if (weapon.getOnHit() != -1)
 							{
-								if (config.EnableRandomizer())
+								if (config.RandomizerOnHit())
 								{
 									CustomSoundID = NextRandom.nextInt(10000);
 								}
@@ -172,7 +203,7 @@ public class YouMissedThatOnePlugin extends Plugin
 						{
 							if (weapon.getOnMiss() != -1)
 							{
-								if (config.EnableRandomizer())
+								if (config.RandomizerOnMiss())
 								{
 									CustomSoundID = NextRandom.nextInt(10000);
 								}
@@ -215,7 +246,7 @@ public class YouMissedThatOnePlugin extends Plugin
 						{
 							if (weapon.getOnHit() != -1)
 							{
-								if (config.EnableRandomizer())
+								if (config.RandomizerOnHit())
 								{
 									CustomSoundID = NextRandom.nextInt(10000);
 								}
@@ -246,7 +277,7 @@ public class YouMissedThatOnePlugin extends Plugin
 						{
 							if (weapon.getOnMiss() != -1)
 							{
-								if (config.EnableRandomizer())
+								if (config.RandomizerOnMiss())
 								{
 									CustomSoundID = NextRandom.nextInt(10000);
 								}
@@ -284,45 +315,6 @@ public class YouMissedThatOnePlugin extends Plugin
 		// keep track what the animation was
 		WasAnimationID = PlayingAnimationID;
 
-	}
-
-	@Subscribe
-	public void onItemContainerChanged(ItemContainerChanged event)
-	{
-		// Check if the updated container is the equipment container
-		if (event.getContainerId() == InventoryID.EQUIPMENT.getId())
-		{
-			// get currently equipped weaponID
-			ItemContainer equipment = event.getItemContainer();
-			if (equipment != null)
-			{
-				int SlotIdx = EquipmentInventorySlot.WEAPON.getSlotIdx();
-				Item slotItem = equipment.getItem(SlotIdx);
-				if (slotItem != null)
-				{
-					HeldWeaponID = slotItem.getId();
-				}
-				else
-				{
-					HeldWeaponID = -1;
-				}
-
-				if (HeldWeaponID != WasHeldWeaponID)
-				{
-					WasHeldWeaponID = HeldWeaponID;
-
-					if (TwoTickWeaponList.contains(HeldWeaponID))
-					{
-						TwoTickFix = true;
-					}
-					else
-					{
-						TwoTickFix = false;
-					}
-				}
-
-			}
-		}
 	}
 
 	@Subscribe
