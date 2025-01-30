@@ -64,6 +64,7 @@ public class YouMissedThatOnePlugin extends Plugin
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
 	public List<UserWeaponData> NormalWeaponList = new ArrayList<>();
 	Random NextRandom = new Random();
+	private Clip CurrentClip;
 
 	@Override
 	protected void startUp() throws Exception
@@ -105,6 +106,12 @@ public class YouMissedThatOnePlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		overlayManager.remove(youMissedThatOneOverlay);
+
+		if (CurrentClip != null)
+		{
+			CurrentClip.stop();   // Stop the previous clip
+			CurrentClip.close();  // Release resources
+		}
 	}
 
 	@Subscribe
@@ -532,8 +539,18 @@ public class YouMissedThatOnePlugin extends Plugin
 
 	public void playCustomSound(File soundFile, int volume)
 	{
-		try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile))
+		try
 		{
+			if (!config.SoundSwapOverlap())
+			{
+				if (CurrentClip != null)
+				{
+					CurrentClip.stop();   // Stop the previous clip
+					CurrentClip.close();  // Release resources
+				}
+			}
+
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
 			Clip clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 
@@ -547,7 +564,17 @@ public class YouMissedThatOnePlugin extends Plugin
 				volumeControl.setValue(volumeInDecibels);
 			}
 
+			clip.addLineListener(event ->
+			{
+				if (event.getType() == LineEvent.Type.STOP)
+				{
+					clip.close();
+				}
+			});
+
 			clip.start();
+			CurrentClip = clip;
+
 		}
 		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
 		{

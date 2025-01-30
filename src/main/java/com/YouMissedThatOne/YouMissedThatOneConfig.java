@@ -42,12 +42,20 @@ public interface YouMissedThatOneConfig extends Config
 	default int SoundSwapVolume() { return 50; }
 
 	@ConfigItem(
+			keyName = "SoundSwapOverlap",
+			name = "Overlap swapped sounds",
+			description = "Enables swapped sound effects to overlap if the audio clips are long enough.",
+			position = 4
+	)
+	default boolean SoundSwapOverlap() { return false; }
+
+	@ConfigItem(
 			keyName = "RandomizerOnHit",
 			name = "Randomize sound on hit",
 			description = "Plays random sound effects on hit for the selected weapons." +
 					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected" +
 					"<br/> The randomized sound ID is chosen within the range of 0–10,000.",
-			position = 4
+			position = 5
 	)
 	default boolean RandomizerOnHit() { return false; }
 
@@ -57,21 +65,21 @@ public interface YouMissedThatOneConfig extends Config
 			description = "Plays random sound effects on miss for the selected weapons." +
 					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected" +
 					"<br/> The randomized sound ID is chosen within the range of 0–10,000.",
-			position = 4
+			position = 6
 	)
 	default boolean RandomizerOnMiss() { return false; }
 
 	@ConfigSection(
 			name = "Special attacks",
 			description = "Settings for special attacks",
-			position = 6
+			position = 7
 	)
 	String SPECIAL_ATTACKS_SECTION = "SpecialAttackSounds";
 
 	@ConfigSection(
 			name = "Normal attacks",
 			description = "Settings for normal attacks",
-			position = 7
+			position = 8
 	)
 	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
 
