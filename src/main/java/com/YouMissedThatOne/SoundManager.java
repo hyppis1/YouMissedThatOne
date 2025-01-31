@@ -16,7 +16,6 @@ public class SoundManager {
         this.config = config;
     }
 
-    private final List<Clip> clipPool = new ArrayList<>();
     private final Map<File, byte[]> soundCache = new HashMap<>();
     private final Map<File, Clip> clipMap = new HashMap<>();
 
@@ -108,6 +107,18 @@ public class SoundManager {
             float volumeInDecibels = (volume > 0) ? 20f * (float) Math.log10(volume / 100.0) : -80f;
             volumeControl.setValue(volumeInDecibels);
         }
+    }
+
+    public void cleanup() {
+        for (Map.Entry<File, Clip> entry : clipMap.entrySet()) {
+            Clip clip = entry.getValue();
+            if (clip.isOpen()) {
+                clip.stop();
+                clip.flush();
+                clip.close();
+            }
+        }
+        clipMap.clear();
     }
 
 }

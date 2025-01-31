@@ -103,6 +103,7 @@ public class YouMissedThatOnePlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		overlayManager.remove(youMissedThatOneOverlay);
+		soundManager.cleanup();
 	}
 
 	@Subscribe
