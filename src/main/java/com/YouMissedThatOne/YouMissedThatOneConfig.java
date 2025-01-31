@@ -101,7 +101,7 @@ public interface YouMissedThatOneConfig extends Config
 						"<br/> Separate IDs with commas. To add multiple weapons, separate each set with a semicolon." +
 						"<br/> For unarmed attacks, use the weapon item ID \"-1\". If you only want one of the sound effects, set the other sound ID to \"-1\"" +
 						"<br/> For example. \"26374, 9168, 1569, 1640;\" Where 26374 is zcb item ID, 9168 is zcb attack animation ID, 1569 is sound ID on hit, and 1640 is sound ID on miss." +
-						"<br/> You can add comments by using \"//\". Ensure the comment follows the data and precedes the semicolon. For example: \"26374, 9168, 1569, 1640 // This is zcb;\"",
+						"<br/> You can add comments by using \"//\". Ensure the comment follows the data and precedes the semicolon. For example: \"26374, 9168, 1569, 1640 //This is zcb;\"",
 			position = 2,
 			section = SPECIAL_ATTACKS_SECTION
 	)

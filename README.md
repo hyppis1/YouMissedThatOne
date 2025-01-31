@@ -18,6 +18,7 @@ After completing these steps, you should have a list of IDs similar to this: "26
 Where 26374 is zcb item ID, 9168 is zcb attack animation ID, 1569 is sound ID on hit, and 1640 is sound ID on miss
 
 To add multiple weapons, separate each entry with a semicolon. For example "26374, 9168, 1569, 1640; xxx, xxx, xxx, xxx;" etc.
+You can add comments by using "//". Ensure the comment follows the data and precedes the semicolon. For example: "26374, 9168, 1569, 1640 //This is zcb;"
 
 ## Sound swapping
 
