@@ -18,11 +18,8 @@ import net.runelite.client.RuneLite;
 import net.runelite.api.ChatMessageType;
 
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 @Slf4j
 @PluginDescriptor(
@@ -43,10 +40,8 @@ public class YouMissedThatOnePlugin extends Plugin
 	@Inject
 	private ItemManager itemManager;
 
-
 	File runeliteDir = RuneLite.RUNELITE_DIR;
 	File customSoundsDir = new File(runeliteDir, "YouMissedThatOne");
-
 
 	boolean SpecialUsed = false;
 	boolean HpXpDrop = false;
@@ -64,7 +59,7 @@ public class YouMissedThatOnePlugin extends Plugin
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
 	public List<UserWeaponData> NormalWeaponList = new ArrayList<>();
 	Random NextRandom = new Random();
-	private Clip CurrentClip;
+	private SoundManager soundManager;
 
 	@Override
 	protected void startUp() throws Exception
@@ -87,6 +82,8 @@ public class YouMissedThatOnePlugin extends Plugin
 
 		TwoTickWeaponListMaker();
 
+		soundManager = new SoundManager(config);
+
 		try
 		{
 			if (!customSoundsDir.exists())
@@ -106,12 +103,6 @@ public class YouMissedThatOnePlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		overlayManager.remove(youMissedThatOneOverlay);
-
-		if (CurrentClip != null)
-		{
-			CurrentClip.stop();   // Stop the previous clip
-			CurrentClip.close();  // Release resources
-		}
 	}
 
 	@Subscribe
@@ -160,9 +151,13 @@ public class YouMissedThatOnePlugin extends Plugin
 			}
 			TwoTickCooldown = 1;
 		}
-		// If using slower weapon, just check if current animation ID isn't same as last time
-		else if (PlayingAnimationID == WasAnimationID)
+		// If using slower weapon, just check if current animation ID isn't same as last time. Also wait out two tick cooldown if its still going.
+		else if (PlayingAnimationID == WasAnimationID || TwoTickCooldown > 0)
 		{
+			if (TwoTickCooldown > 0)
+			{
+				TwoTickCooldown--;
+			}
 			return;
 		}
 
@@ -193,7 +188,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile, Volume);
 									}
 									else
 									{
@@ -224,7 +219,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile, Volume);
 									}
 									else
 									{
@@ -267,7 +262,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile, Volume);
 									}
 									else
 									{
@@ -298,7 +293,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile, Volume);
 									}
 									else
 									{
@@ -509,77 +504,41 @@ public class YouMissedThatOnePlugin extends Plugin
 		String[] WeaponEntries = input.split(";");
 		for (String entry : WeaponEntries)
 		{
-			// Split each entry into its components: name, number1, number2
-			String[] parts = entry.split(",");
-			if (parts.length == 4)
+			// Remove any comment (text after "//")
+			int commentIndex = entry.indexOf("//");
+			if (commentIndex != -1)
 			{
-				try
-				{
-					int WeaponID = Integer.parseInt(parts[0].trim()); // WeaponID
-					int AnimationID = Integer.parseInt(parts[1].trim()); // AnimationID
-					int OnHit = Integer.parseInt(parts[2].trim()); // On hit
-					int OnMiss = Integer.parseInt(parts[3].trim()); // On miss
+				entry = entry.substring(0, commentIndex).trim(); // Remove the comment
+			}
 
-					// Add the parsed data to the list
-					WeaponList.add(new UserWeaponData(WeaponID, AnimationID, OnHit, OnMiss));
+			if (!entry.isEmpty())
+			{
+				// Split each entry into its components: name, number1, number2
+				String[] parts = entry.split(",");
+				if (parts.length == 4)
+				{
+					try
+					{
+						int WeaponID = Integer.parseInt(parts[0].trim()); // WeaponID
+						int AnimationID = Integer.parseInt(parts[1].trim()); // AnimationID
+						int OnHit = Integer.parseInt(parts[2].trim()); // On hit
+						int OnMiss = Integer.parseInt(parts[3].trim()); // On miss
+
+						// Add the parsed data to the list
+						WeaponList.add(new UserWeaponData(WeaponID, AnimationID, OnHit, OnMiss));
+					}
+					catch (NumberFormatException e)
+					{
+						sendGameMessage("Failed to parse custom sound entry \"" + entry + "\" Please check your input.");
+					}
 				}
-				catch (NumberFormatException e)
+				else
 				{
 					sendGameMessage("Failed to parse custom sound entry \"" + entry + "\" Please check your input.");
 				}
 			}
-			else
-			{
-				sendGameMessage("Failed to parse custom sound entry \"" + entry + "\" Please check your input.");
-			}
 		}
-
 		return WeaponList;
-	}
-
-	public void playCustomSound(File soundFile, int volume)
-	{
-		try
-		{
-			if (!config.SoundSwapOverlap())
-			{
-				if (CurrentClip != null)
-				{
-					CurrentClip.stop();   // Stop the previous clip
-					CurrentClip.close();  // Release resources
-				}
-			}
-
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
-
-			// Adjust the volume
-			if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN))
-			{
-				FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-
-				// Convert volume from 0-100 to decibels
-				float volumeInDecibels = 20f * (float) Math.log10(volume / 100.0);
-				volumeControl.setValue(volumeInDecibels);
-			}
-
-			clip.addLineListener(event ->
-			{
-				if (event.getType() == LineEvent.Type.STOP)
-				{
-					clip.close();
-				}
-			});
-
-			clip.start();
-			CurrentClip = clip;
-
-		}
-		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
-		{
-			log.error("Error playing custom sound: {}", e.getMessage());
-		}
 	}
 
 	@Subscribe
