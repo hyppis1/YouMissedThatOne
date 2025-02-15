@@ -30,4 +30,11 @@ The directory can be found at: "%USERPROFILE%/.runelite/YouMissedThatOne".
 
 Tip: For sound swapping, the sound ID doesn’t need to be a valid in-game ID. For example, you can use "26374, 9168, -2, -3".
 As long as you have sound files named "-2.wav" and "-3.wav" in the plugin directory, the sounds will play.
-The randomized sound ID is chosen from a range of 0 to 10,000, so negative sound IDs can't be selected.
+
+## Sound randomizer
+
+In the plugin settings, you can enable the "Randomize sound on hit" and "Randomize sound on miss" options.
+When enabled, the plugin will randomly select a sound ID from the specified range instead of playing a fixed sound. If the sound ID is set to "-1", no random sound will play.
+If sound swapping is enabled, and the randomly selected sound ID matches a swapped sound, your custom sound will be played instead of the random sound.
+To configure the randomizer, use the "Randomize ID range" setting in the plugin options. The range should be entered in the format "min-max" (for example, 500/850). The values are inclusive, meaning both the minimum and maximum numbers are possible outcomes.
+Negative numbers can also be used. For example, if you have a custom sound swap assigned to ID -2 and set the randomizer range to "-10 to -1", there will be a 1 in 10 chance for your custom sound to play when the randomizer is triggered.
