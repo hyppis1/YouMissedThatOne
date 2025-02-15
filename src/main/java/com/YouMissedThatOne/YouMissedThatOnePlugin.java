@@ -147,28 +147,14 @@ public class YouMissedThatOnePlugin extends Plugin
 		}
 
 		// If using 2 tick weapon, use this scuffed "fix" to bypass animation length problem
-		if (TwoTickFix)
+		if (TwoTickCooldown > 0)
 		{
-			if (TwoTickCooldown > 0)
-			{
-				TwoTickCooldown--;
-				// make hp xp drop and special attack used false
-				HpXpDrop = false;
-				SpecialUsed = false;
-				return;
-			}
-			TwoTickCooldown = 1;
+			TwoTickCooldown--;
+			return;
 		}
-		// If using slower weapon, just check if current animation ID isn't same as last time. Also wait out two tick cooldown if its still going.
-		else if (PlayingAnimationID == WasAnimationID || TwoTickCooldown > 0)
+		// If using slower weapon, just check if current animation ID isn't same as last time.
+		else if (PlayingAnimationID == WasAnimationID && !TwoTickFix)
 		{
-			if (TwoTickCooldown > 0)
-			{
-				TwoTickCooldown--;
-			}
-			// make hp xp drop and special attack used false
-			HpXpDrop = false;
-			SpecialUsed = false;
 			return;
 		}
 
@@ -181,6 +167,12 @@ public class YouMissedThatOnePlugin extends Plugin
 				{
 					if (weapon.getWeaponID() == HeldWeaponID && weapon.getAnimationID() == PlayingAnimationID)
 					{
+
+						if (TwoTickFix)
+						{
+							TwoTickCooldown = 1;
+						}
+
 						if (HpXpDrop)
 						{
 							if (weapon.getOnHit() != -1)
@@ -255,6 +247,11 @@ public class YouMissedThatOnePlugin extends Plugin
 				{
 					if (weapon.getWeaponID() == HeldWeaponID && weapon.getAnimationID() == PlayingAnimationID)
 					{
+						if (TwoTickFix)
+						{
+							TwoTickCooldown = 1;
+						}
+
 						if (HpXpDrop)
 						{
 							if (weapon.getOnHit() != -1)
