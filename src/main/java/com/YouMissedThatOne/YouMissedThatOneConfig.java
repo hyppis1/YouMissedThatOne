@@ -49,13 +49,34 @@ public interface YouMissedThatOneConfig extends Config
 	)
 	default boolean SoundSwapOverlap() { return false; }
 
+	@ConfigSection(
+			name = "Sound randomizer",
+			description = "Settings for sound randomizing",
+			position = 5
+	)
+	String SOUND_RANDOMIZER_SECTION = "SoundRandomizer";
+
+	@ConfigSection(
+			name = "Special attacks",
+			description = "Settings for special attacks",
+			position = 6
+	)
+	String SPECIAL_ATTACKS_SECTION = "SpecialAttackSounds";
+
+	@ConfigSection(
+			name = "Normal attacks",
+			description = "Settings for normal attacks",
+			position = 7
+	)
+	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
+
 	@ConfigItem(
 			keyName = "RandomizerOnHit",
 			name = "Randomize sound on hit",
 			description = "Plays random sound effects on hit for the selected weapons." +
-					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected" +
-					"<br/> The randomized sound ID is chosen within the range of 0–10,000.",
-			position = 5
+					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected",
+			position = 1,
+			section = SOUND_RANDOMIZER_SECTION
 	)
 	default boolean RandomizerOnHit() { return false; }
 
@@ -63,25 +84,21 @@ public interface YouMissedThatOneConfig extends Config
 			keyName = "RandomizerOnMiss",
 			name = "Randomize sound on miss",
 			description = "Plays random sound effects on miss for the selected weapons." +
-					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected" +
-					"<br/> The randomized sound ID is chosen within the range of 0–10,000.",
-			position = 6
+					"<br/> If sound swap is enabled, custom sounds can also play when their ID is randomly selected",
+			position = 2,
+			section = SOUND_RANDOMIZER_SECTION
 	)
 	default boolean RandomizerOnMiss() { return false; }
 
-	@ConfigSection(
-			name = "Special attacks",
-			description = "Settings for special attacks",
-			position = 7
+	@ConfigItem(
+			keyName = "RandomizerValueRange",
+			name = "Randomize ID range",
+			description = "Enter a range in format 'min-max' (e.g., 500/850). The values are inclusive"+
+					"<br/> At the time of writing, there are approximately 10100 sound IDs available.",
+			position = 3,
+			section = SOUND_RANDOMIZER_SECTION
 	)
-	String SPECIAL_ATTACKS_SECTION = "SpecialAttackSounds";
-
-	@ConfigSection(
-			name = "Normal attacks",
-			description = "Settings for normal attacks",
-			position = 8
-	)
-	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
+	default String valueRange() {return "0/10100";}
 
 	@ConfigItem(
 			keyName = "SpecialAttackSounds",

@@ -59,6 +59,8 @@ public class YouMissedThatOnePlugin extends Plugin
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
 	public List<UserWeaponData> NormalWeaponList = new ArrayList<>();
 	Random NextRandom = new Random();
+	public int RandomizerMin = 0;
+	public int RandomizerMax = 10100;
 	private SoundManager soundManager;
 
 	@Override
@@ -79,6 +81,8 @@ public class YouMissedThatOnePlugin extends Plugin
 		}
 
 		Volume = config.SoundSwapVolume();
+
+		RandomizerValueRange();
 
 		TwoTickWeaponListMaker();
 
@@ -148,6 +152,9 @@ public class YouMissedThatOnePlugin extends Plugin
 			if (TwoTickCooldown > 0)
 			{
 				TwoTickCooldown--;
+				// make hp xp drop and special attack used false
+				HpXpDrop = false;
+				SpecialUsed = false;
 				return;
 			}
 			TwoTickCooldown = 1;
@@ -159,6 +166,9 @@ public class YouMissedThatOnePlugin extends Plugin
 			{
 				TwoTickCooldown--;
 			}
+			// make hp xp drop and special attack used false
+			HpXpDrop = false;
+			SpecialUsed = false;
 			return;
 		}
 
@@ -177,7 +187,7 @@ public class YouMissedThatOnePlugin extends Plugin
 							{
 								if (config.RandomizerOnHit())
 								{
-									CustomSoundID = NextRandom.nextInt(10000);
+									CustomSoundID = RandomizerMin + NextRandom.nextInt((RandomizerMax - RandomizerMin) + 1);
 								}
 								else
 								{
@@ -208,7 +218,7 @@ public class YouMissedThatOnePlugin extends Plugin
 							{
 								if (config.RandomizerOnMiss())
 								{
-									CustomSoundID = NextRandom.nextInt(10000);
+									CustomSoundID = RandomizerMin + NextRandom.nextInt((RandomizerMax - RandomizerMin) + 1);
 								}
 								else
 								{
@@ -251,7 +261,7 @@ public class YouMissedThatOnePlugin extends Plugin
 							{
 								if (config.RandomizerOnHit())
 								{
-									CustomSoundID = NextRandom.nextInt(10000);
+									CustomSoundID = RandomizerMin + NextRandom.nextInt((RandomizerMax - RandomizerMin) + 1);
 								}
 								else
 								{
@@ -282,7 +292,7 @@ public class YouMissedThatOnePlugin extends Plugin
 							{
 								if (config.RandomizerOnMiss())
 								{
-									CustomSoundID = NextRandom.nextInt(10000);
+									CustomSoundID = RandomizerMin + NextRandom.nextInt((RandomizerMax - RandomizerMin) + 1);
 								}
 								else
 								{
@@ -360,6 +370,11 @@ public class YouMissedThatOnePlugin extends Plugin
 			case "SoundSwapVolume":
 			{
 				Volume = config.SoundSwapVolume();
+				break;
+			}
+			case "RandomizerValueRange":
+			{
+				RandomizerValueRange();
 				break;
 			}
 		}
@@ -447,6 +462,33 @@ public class YouMissedThatOnePlugin extends Plugin
 		// Blowpipe
 		TwoTickWeaponList.add(ItemID.TOXIC_BLOWPIPE);
 		TwoTickWeaponList.add(ItemID.BLAZING_BLOWPIPE);
+	}
+
+	public void RandomizerValueRange()
+	{
+		String[] parts = config.valueRange().split("/");
+		if (parts.length == 2) {
+			try {
+				int min = Integer.parseInt(parts[0].trim());
+				int max = Integer.parseInt(parts[1].trim());
+
+				if (min > max)
+				{
+					sendGameMessage("Invalid range: Minimum ("+ min +") cannot be greater than Maximum ("+ max +") Please check your input.");
+					return;
+				}
+
+				RandomizerMin = min;
+				RandomizerMax = max;
+
+			} catch (NumberFormatException e) {
+				sendGameMessage("Failed to parse randomizer value range \"" + config.valueRange() + "\" Please check your input.");
+			}
+		}
+		else
+		{
+			sendGameMessage("Failed to parse randomizer value range \"" + config.valueRange() + "\" Please check your input.");
+		}
 	}
 
 	public void sendGameMessage(String message)
