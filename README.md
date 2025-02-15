@@ -8,6 +8,7 @@ The sound effects are triggered based on the attack animation, and a hit is dete
 
 In the plugin settings, you can enable the "Show ID Overlay" option. 
 This feature will help you identify your weapon's item ID and attack animation ID.
+
 Once you've obtained the weapon's item ID and corresponding attack animation ID, you can add them to the
 "Custom Special Attack Sounds" or "Custom Normal Attack Sounds" sections, depending on whether it's a special or normal attack.
 Next, choose the custom sound effects you’d like to play on a hit or miss. ID of "-1" plays no sound.
@@ -24,6 +25,7 @@ You can add comments by using "//". Ensure the comment follows the data and prec
 
 In the plugin settings, you can enable the "Enable Sound Swap" option. 
 This feature lets you replace the default hit and miss sound effects with custom sound files of your choice.
+
 The custom sound files must be in .wav format, and their filenames must match the sound ID you want to replace. 
 For example, to swap sound ID 1640 with your own sound effect, name the file 1640.wav and place it in the plugin’s directory.
 The directory can be found at: "%USERPROFILE%/.runelite/YouMissedThatOne".
@@ -35,6 +37,8 @@ As long as you have sound files named "-2.wav" and "-3.wav" in the plugin direct
 
 In the plugin settings, you can enable the "Randomize sound on hit" and "Randomize sound on miss" options.
 When enabled, the plugin will randomly select a sound ID from the specified range instead of playing a fixed sound. If the sound ID is set to "-1", no random sound will play.
+
 If sound swapping is enabled, and the randomly selected sound ID matches a swapped sound, your custom sound will be played instead of the random sound.
 To configure the randomizer, use the "Randomize ID range" setting in the plugin options. The range should be entered in the format "min-max" (for example, 500/850). The values are inclusive, meaning both the minimum and maximum numbers are possible outcomes.
-Negative numbers can also be used. For example, if you have a custom sound swap assigned to ID -2 and set the randomizer range to "-10 to -1", there will be a 1 in 10 chance for your custom sound to play when the randomizer is triggered.
+
+Tip: Negative numbers can also be used. For example, if you have a custom sound swap assigned to ID -2 and set the randomizer range to "-10 to -1", there will be a 1 in 10 chance for your custom sound to play when the randomizer is triggered.
