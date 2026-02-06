@@ -42,3 +42,8 @@ If sound swapping is enabled, and the randomly selected sound ID matches a swapp
 To configure the randomizer, use the "Randomize ID range" setting in the plugin options. The range should be entered in the format "min/max" (for example, 500/850). The values are inclusive, meaning both the minimum and maximum numbers are possible outcomes.
 
 Tip: Negative numbers can also be used. For example, if you have a custom sound swap assigned to ID -2 and set the randomizer range to "-10 to -1", there will be a 1 in 10 chance for your custom sound to play when the randomizer is triggered.
+
+## Change log
+
+6.2.2026 - Fixed fast weapons and rewrote the SoundManager to use RuneLite’s AudioPlayer instead of javax.sound.sampled. 
+Note: overlapping sounds are now always allowed, as per the new audio system.
