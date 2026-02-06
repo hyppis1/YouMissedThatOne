@@ -57,11 +57,11 @@ public class YouMissedThatOneOverlay extends OverlayPanel
                     .right(String.valueOf(plugin.PlayingAnimationFrame))
                     .build());
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Hp xp drop: ")
+                    .left("Hp xp (flashes): ")
                     .right(String.valueOf(plugin.HpXpDrop))
                     .build());
             panelComponent.getChildren().add(LineComponent.builder()
-                    .left("Special used: ")
+                    .left("Special used (flashes): ")
                     .right(String.valueOf(plugin.SpecialUsed))
                     .build());
 
