@@ -7,7 +7,6 @@ import java.util.*;
 import net.runelite.client.audio.AudioPlayer;
 
 
-
 @Slf4j
 public class SoundManager
 {
@@ -59,7 +58,7 @@ public class SoundManager
 
             audioPlayer.play(soundFile, gainDb);
         }
-        catch (IOException | javax.sound.sampled.UnsupportedAudioFileException | javax.sound.sampled.LineUnavailableException e)
+        catch (Exception e)
         {
             log.error("Error playing custom sound: {}", e.getMessage());
         }
