@@ -19,13 +19,21 @@ public interface YouMissedThatOneConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "DeBugInfoOverlay",
+			name = "Show debug info",
+			description = "Additional info for debugging",
+			position = 2
+	)
+	default boolean DeBugInfoOverlay() {return false;}
+
+	@ConfigItem(
 			keyName = "EnableSoundSwap",
 			name = "Enable sound swap",
 			description = "Allows you to replace sound effects, similar to the Sound Swapper plugin." +
 					"<br/> To replace a sound effect, add a .wav file to this plugin’s directory with the corresponding sound ID as the filename." +
 					"<br/> For example, to replace sound ID \"1569\" with your custom sound, name the file \"1569.wav\"" +
 					"<br/> Plugin directory location: %USERPROFILE%/.runelite/YouMissedThatOne",
-			position = 2
+			position = 3
 	)
 	default boolean EnableSoundSwap()
 	{
@@ -36,7 +44,7 @@ public interface YouMissedThatOneConfig extends Config
 			keyName = "SoundSwapVolume",
 			name = "Sound swap volume",
 			description = "Set the volume of swapped sounds (0-100)",
-			position = 3
+			position = 4
 	)
 	@Range(min = 0, max = 100)
 	default int SoundSwapVolume() { return 50; }
@@ -45,28 +53,28 @@ public interface YouMissedThatOneConfig extends Config
 			keyName = "SoundSwapOverlap",
 			name = "Overlap swapped sounds",
 			description = "Enables swapped sound effects to overlap if the audio clips are long enough.",
-			position = 4
+			position = 5
 	)
 	default boolean SoundSwapOverlap() { return false; }
 
 	@ConfigSection(
 			name = "Sound randomizer",
 			description = "Settings for sound randomizing",
-			position = 5
+			position = 6
 	)
 	String SOUND_RANDOMIZER_SECTION = "SoundRandomizer";
 
 	@ConfigSection(
 			name = "Special attacks",
 			description = "Settings for special attacks",
-			position = 6
+			position = 7
 	)
 	String SPECIAL_ATTACKS_SECTION = "SpecialAttackSounds";
 
 	@ConfigSection(
 			name = "Normal attacks",
 			description = "Settings for normal attacks",
-			position = 7
+			position = 8
 	)
 	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
 

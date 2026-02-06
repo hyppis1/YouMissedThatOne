@@ -46,6 +46,26 @@ public class YouMissedThatOneOverlay extends OverlayPanel
                 .left("Animation ID: ")
                 .right(String.valueOf(plugin.PlayingAnimationID))
                 .build());
+
+        if (config.DeBugInfoOverlay())
+        {
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("----------")
+                    .build());
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Animation frame: ")
+                    .right(String.valueOf(plugin.PlayingAnimationFrame))
+                    .build());
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Hp xp drop: ")
+                    .right(String.valueOf(plugin.HpXpDrop))
+                    .build());
+            panelComponent.getChildren().add(LineComponent.builder()
+                    .left("Special used: ")
+                    .right(String.valueOf(plugin.SpecialUsed))
+                    .build());
+
+        }
         return super.render(graphics);
     }
 }

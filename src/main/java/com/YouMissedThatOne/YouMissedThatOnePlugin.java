@@ -45,17 +45,13 @@ public class YouMissedThatOnePlugin extends Plugin
 
 	boolean SpecialUsed = false;
 	boolean HpXpDrop = false;
-	boolean TwoTickFix = false;
-	private int TwoTickCooldown = 0;
 	public int specialPercentage = 0;
 	public int HeldWeaponID;
-	public int WasHeldWeaponID = -1;
 	public int PlayingAnimationID;
-	public int WasAnimationID = -1;
+	public int PlayingAnimationFrame;
 	public int Volume;
 	public int CustomSoundID;
 	public String UserData;
-	List<Integer> TwoTickWeaponList = new ArrayList<Integer>();
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
 	public List<UserWeaponData> NormalWeaponList = new ArrayList<>();
 	Random NextRandom = new Random();
@@ -83,8 +79,6 @@ public class YouMissedThatOnePlugin extends Plugin
 		Volume = config.SoundSwapVolume();
 
 		RandomizerValueRange();
-
-		TwoTickWeaponListMaker();
 
 		soundManager = new SoundManager(config);
 
@@ -115,6 +109,27 @@ public class YouMissedThatOnePlugin extends Plugin
 	{
 		Client client = this.client;
 
+		Actor player = client.getLocalPlayer();
+		if (player == null)
+		{
+			return;
+		}
+
+		if (player.getAnimation() == PlayingAnimationID)
+		{
+			PlayingAnimationFrame = player.getAnimationFrame();
+		}
+
+		// if animation frame is greater than 1, animation from previous tick is still playing.
+		// only run main code when new animation starts.
+		if (PlayingAnimationFrame > 1)
+		{
+			// make hp xp drop and special attack used false
+			HpXpDrop = false;
+			SpecialUsed = false;
+			return;
+		}
+
 		// get currently equipped weaponID
 		ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
 		if (equipment != null)
@@ -129,41 +144,7 @@ public class YouMissedThatOnePlugin extends Plugin
 			{
 				HeldWeaponID = -1;
 			}
-
-			// check if the weapon was same as last tick, less time used to check if its 2 tick weapon or not
-			if (HeldWeaponID != WasHeldWeaponID)
-			{
-				WasHeldWeaponID = HeldWeaponID;
-
-				if (TwoTickWeaponList.contains(HeldWeaponID))
-				{
-					TwoTickFix = true;
-				}
-				else
-				{
-					TwoTickFix = false;
-				}
-			}
 		}
-
-		// If using 2 tick weapon, use this scuffed "fix" to bypass animation length problem
-		if (TwoTickCooldown > 0)
-		{
-			TwoTickCooldown--;
-			// make hp xp drop and special attack used false
-			HpXpDrop = false;
-			SpecialUsed = false;
-			return;
-		}
-		// If using slower weapon, just check if current animation ID isn't same as last time.
-		else if (PlayingAnimationID == WasAnimationID && !TwoTickFix)
-		{
-			// make hp xp drop and special attack used false
-			HpXpDrop = false;
-			SpecialUsed = false;
-			return;
-		}
-
 
 		if (SpecialUsed)
 		{
@@ -173,12 +154,6 @@ public class YouMissedThatOnePlugin extends Plugin
 				{
 					if (weapon.getWeaponID() == HeldWeaponID && weapon.getAnimationID() == PlayingAnimationID)
 					{
-
-						if (TwoTickFix)
-						{
-							TwoTickCooldown = 1;
-						}
-
 						if (HpXpDrop)
 						{
 							if (weapon.getOnHit() != -1)
@@ -253,11 +228,6 @@ public class YouMissedThatOnePlugin extends Plugin
 				{
 					if (weapon.getWeaponID() == HeldWeaponID && weapon.getAnimationID() == PlayingAnimationID)
 					{
-						if (TwoTickFix)
-						{
-							TwoTickCooldown = 1;
-						}
-
 						if (HpXpDrop)
 						{
 							if (weapon.getOnHit() != -1)
@@ -328,8 +298,6 @@ public class YouMissedThatOnePlugin extends Plugin
 		// make hp xp drop and special attack used false
 		HpXpDrop = false;
 		SpecialUsed = false;
-		// keep track what the animation was
-		WasAnimationID = PlayingAnimationID;
 
 	}
 
@@ -342,6 +310,8 @@ public class YouMissedThatOnePlugin extends Plugin
 		if (actor == client.getLocalPlayer())
 		{
 			PlayingAnimationID = actor.getAnimation();
+			PlayingAnimationFrame = 0;
+
 		}
 	}
 
@@ -381,90 +351,6 @@ public class YouMissedThatOnePlugin extends Plugin
 				break;
 			}
 		}
-	}
-
-	public void TwoTickWeaponListMaker()
-	{
-		// this is just easy way to make list of all 2 tick weapons which can cause problems on the plugin
-
-		// Knives
-		TwoTickWeaponList.add(ItemID.BRONZE_KNIFE);
-		TwoTickWeaponList.add(ItemID.BRONZE_KNIFEP);
-		TwoTickWeaponList.add(ItemID.BRONZE_KNIFEP_5654);
-		TwoTickWeaponList.add(ItemID.BRONZE_KNIFEP_5661);
-		TwoTickWeaponList.add(ItemID.IRON_KNIFE);
-		TwoTickWeaponList.add(ItemID.IRON_KNIFEP);
-		TwoTickWeaponList.add(ItemID.IRON_KNIFEP_5655);
-		TwoTickWeaponList.add(ItemID.IRON_KNIFEP_5662);
-		TwoTickWeaponList.add(ItemID.STEEL_KNIFE);
-		TwoTickWeaponList.add(ItemID.STEEL_KNIFEP);
-		TwoTickWeaponList.add(ItemID.STEEL_KNIFEP_5656);
-		TwoTickWeaponList.add(ItemID.STEEL_KNIFEP_5663);
-		TwoTickWeaponList.add(ItemID.BLACK_KNIFE);
-		TwoTickWeaponList.add(ItemID.BLACK_KNIFEP);
-		TwoTickWeaponList.add(ItemID.BLACK_KNIFEP_5658);
-		TwoTickWeaponList.add(ItemID.BLACK_KNIFEP_5665);
-		TwoTickWeaponList.add(ItemID.MITHRIL_KNIFE);
-		TwoTickWeaponList.add(ItemID.MITHRIL_KNIFEP);
-		TwoTickWeaponList.add(ItemID.MITHRIL_KNIFEP_5657);
-		TwoTickWeaponList.add(ItemID.MITHRIL_KNIFEP_5664);
-		TwoTickWeaponList.add(ItemID.ADAMANT_KNIFE);
-		TwoTickWeaponList.add(ItemID.ADAMANT_KNIFEP);
-		TwoTickWeaponList.add(ItemID.ADAMANT_KNIFEP_5659);
-		TwoTickWeaponList.add(ItemID.ADAMANT_KNIFEP_5666);
-		TwoTickWeaponList.add(ItemID.RUNE_KNIFE);
-		TwoTickWeaponList.add(ItemID.RUNE_KNIFEP);
-		TwoTickWeaponList.add(ItemID.RUNE_KNIFEP_5660);
-		TwoTickWeaponList.add(ItemID.RUNE_KNIFEP_5667);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFE);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFEP);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFE_22812);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFE_22814);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFE_27157);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFEP_22808);
-		TwoTickWeaponList.add(ItemID.DRAGON_KNIFEP_22810);
-
-		// Darts
-		TwoTickWeaponList.add(ItemID.BRONZE_DART);
-		TwoTickWeaponList.add(ItemID.BRONZE_DARTP);
-		TwoTickWeaponList.add(ItemID.BRONZE_DARTP_5628);
-		TwoTickWeaponList.add(ItemID.BRONZE_DARTP_5635);
-		TwoTickWeaponList.add(ItemID.IRON_DART);
-		TwoTickWeaponList.add(ItemID.IRON_DARTP);
-		TwoTickWeaponList.add(ItemID.IRON_DART_P);
-		TwoTickWeaponList.add(ItemID.IRON_DARTP_5636);
-		TwoTickWeaponList.add(ItemID.STEEL_DART);
-		TwoTickWeaponList.add(ItemID.STEEL_DARTP);
-		TwoTickWeaponList.add(ItemID.STEEL_DARTP_5630);
-		TwoTickWeaponList.add(ItemID.STEEL_DARTP_5637);
-		TwoTickWeaponList.add(ItemID.BLACK_DART);
-		TwoTickWeaponList.add(ItemID.BLACK_DARTP);
-		TwoTickWeaponList.add(ItemID.BLACK_DARTP_5631);
-		TwoTickWeaponList.add(ItemID.BLACK_DARTP_5638);
-		TwoTickWeaponList.add(ItemID.MITHRIL_DART);
-		TwoTickWeaponList.add(ItemID.MITHRIL_DARTP);
-		TwoTickWeaponList.add(ItemID.MITHRIL_DARTP_5632);
-		TwoTickWeaponList.add(ItemID.MITHRIL_DARTP_5639);
-		TwoTickWeaponList.add(ItemID.ADAMANT_DART);
-		TwoTickWeaponList.add(ItemID.ADAMANT_DARTP);
-		TwoTickWeaponList.add(ItemID.ADAMANT_DARTP_5633);
-		TwoTickWeaponList.add(ItemID.ADAMANT_DARTP_5640);
-		TwoTickWeaponList.add(ItemID.RUNE_DART);
-		TwoTickWeaponList.add(ItemID.RUNE_DARTP);
-		TwoTickWeaponList.add(ItemID.RUNE_DARTP_5634);
-		TwoTickWeaponList.add(ItemID.RUNE_DARTP_5641);
-		TwoTickWeaponList.add(ItemID.AMETHYST_DART);
-		TwoTickWeaponList.add(ItemID.AMETHYST_DARTP);
-		TwoTickWeaponList.add(ItemID.AMETHYST_DARTP_25855);
-		TwoTickWeaponList.add(ItemID.AMETHYST_DARTP_25857);
-		TwoTickWeaponList.add(ItemID.DRAGON_DART);
-		TwoTickWeaponList.add(ItemID.DRAGON_DARTP);
-		TwoTickWeaponList.add(ItemID.DRAGON_DARTP_11233);
-		TwoTickWeaponList.add(ItemID.DRAGON_DARTP_11234);
-
-		// Blowpipe
-		TwoTickWeaponList.add(ItemID.TOXIC_BLOWPIPE);
-		TwoTickWeaponList.add(ItemID.BLAZING_BLOWPIPE);
 	}
 
 	public void RandomizerValueRange()
@@ -554,12 +440,14 @@ public class YouMissedThatOnePlugin extends Plugin
 			int commentIndex = entry.indexOf("//");
 			if (commentIndex != -1)
 			{
-				entry = entry.substring(0, commentIndex).trim(); // Remove the comment
+				entry = entry.substring(0, commentIndex); // Remove the comment
 			}
+
+			entry = entry.trim();
 
 			if (!entry.isEmpty())
 			{
-				// Split each entry into its components: name, number1, number2
+				// Split each entry into its components
 				String[] parts = entry.split(",");
 				if (parts.length == 4)
 				{

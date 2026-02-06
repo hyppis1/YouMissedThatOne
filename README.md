@@ -15,11 +15,11 @@ Next, choose the custom sound effects you’d like to play on a hit or miss. ID 
 You can find a list of known sound IDs on the OSRS wiki https://oldschool.runescape.wiki/w/List_of_sound_IDs
 Remember to separate all the IDs with a comma.
 
-After completing these steps, you should have a list of IDs similar to this: "26374, 9168, 1569, 1640".
-Where 26374 is zcb item ID, 9168 is zcb attack animation ID, 1569 is sound ID on hit, and 1640 is sound ID on miss
+After completing these steps, you should have a list of IDs similar to this: "26374, 9168, x, y". Please note that x and y would be actual numbers.
+Where 26374 is zcb item ID, 9168 is zcb attack animation ID, x is sound ID you want to play on hit, and y is sound ID you want to play on miss
 
-To add multiple weapons, separate each entry with a semicolon. For example "26374, 9168, 1569, 1640; xxx, xxx, xxx, xxx;" etc.
-You can add comments by using "//". Ensure the comment follows the data and precedes the semicolon. For example: "26374, 9168, 1569, 1640 //This is zcb;"
+To add multiple weapons, separate each entry with a semicolon. For example "26374, 9168, x, y; xxx, xxx, xxx, xxx;" etc.
+You can add comments by using "//". Ensure the comment follows the data and precedes the semicolon. For example: "26374, 9168, x, y //This is zcb;"
 
 ## Sound swapping
 
