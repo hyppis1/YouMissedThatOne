@@ -16,8 +16,8 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.RuneLite;
 import net.runelite.api.ChatMessageType;
+import net.runelite.client.audio.AudioPlayer;
 
-import javax.sound.sampled.*;
 import java.io.*;
 import java.util.*;
 
@@ -40,6 +40,10 @@ public class YouMissedThatOnePlugin extends Plugin
 	@Inject
 	private ItemManager itemManager;
 
+	@Inject
+	private AudioPlayer audioPlayer;
+
+
 	File runeliteDir = RuneLite.RUNELITE_DIR;
 	File customSoundsDir = new File(runeliteDir, "YouMissedThatOne");
 
@@ -49,7 +53,6 @@ public class YouMissedThatOnePlugin extends Plugin
 	public int HeldWeaponID;
 	public int PlayingAnimationID;
 	public int PlayingAnimationFrame;
-	public int Volume;
 	public int CustomSoundID;
 	public String UserData;
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
@@ -76,11 +79,10 @@ public class YouMissedThatOnePlugin extends Plugin
 			NormalWeaponList = parseWeaponData(UserData);
 		}
 
-		Volume = config.SoundSwapVolume();
-
 		RandomizerValueRange();
 
-		soundManager = new SoundManager(config);
+		soundManager = new SoundManager(config, audioPlayer);
+
 
 		try
 		{
@@ -172,7 +174,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										soundManager.playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile);
 									}
 									else
 									{
@@ -203,7 +205,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										soundManager.playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile);
 									}
 									else
 									{
@@ -246,7 +248,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										soundManager.playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile);
 									}
 									else
 									{
@@ -277,7 +279,7 @@ public class YouMissedThatOnePlugin extends Plugin
 									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
 									if (soundFile.exists())
 									{
-										soundManager.playCustomSound(soundFile, Volume);
+										soundManager.playCustomSound(soundFile);
 									}
 									else
 									{
@@ -338,11 +340,6 @@ public class YouMissedThatOnePlugin extends Plugin
 					NormalWeaponList.clear();
 					NormalWeaponList = parseWeaponData(UserData);
 				}
-				break;
-			}
-			case "SoundSwapVolume":
-			{
-				Volume = config.SoundSwapVolume();
 				break;
 			}
 			case "RandomizerValueRange":

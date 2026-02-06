@@ -49,32 +49,24 @@ public interface YouMissedThatOneConfig extends Config
 	@Range(min = 0, max = 100)
 	default int SoundSwapVolume() { return 50; }
 
-	@ConfigItem(
-			keyName = "SoundSwapOverlap",
-			name = "Overlap swapped sounds",
-			description = "Enables swapped sound effects to overlap if the audio clips are long enough.",
-			position = 5
-	)
-	default boolean SoundSwapOverlap() { return false; }
-
 	@ConfigSection(
 			name = "Sound randomizer",
 			description = "Settings for sound randomizing",
-			position = 6
+			position = 5
 	)
 	String SOUND_RANDOMIZER_SECTION = "SoundRandomizer";
 
 	@ConfigSection(
 			name = "Special attacks",
 			description = "Settings for special attacks",
-			position = 7
+			position = 6
 	)
 	String SPECIAL_ATTACKS_SECTION = "SpecialAttackSounds";
 
 	@ConfigSection(
 			name = "Normal attacks",
 			description = "Settings for normal attacks",
-			position = 8
+			position = 7
 	)
 	String NORMAL_ATTACKS_SECTION = "NormalAttackSounds";
 
