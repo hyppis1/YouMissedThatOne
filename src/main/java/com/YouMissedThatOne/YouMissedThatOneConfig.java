@@ -21,7 +21,7 @@ public interface YouMissedThatOneConfig extends Config
 	@ConfigItem(
 			keyName = "DeBugInfoOverlay",
 			name = "Show debug info",
-			description = "Additional info for debugging",
+			description = "Additional info for debugging when overlay is shown",
 			position = 2
 	)
 	default boolean DeBugInfoOverlay() {return false;}

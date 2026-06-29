@@ -49,11 +49,13 @@ public class YouMissedThatOnePlugin extends Plugin
 
 	boolean SpecialUsed = false;
 	boolean HpXpDrop = false;
+	boolean DebugSpecialUsed = false;
+	boolean DebugHpXpDrop = false;
 	public int specialPercentage = 0;
 	public int HeldWeaponID;
 	public int PlayingAnimationID;
 	public int PlayingAnimationFrame;
-	public int CustomSoundID;
+	public int CustomSoundID = -1;
 	public String UserData;
 	public List<UserWeaponData> SpecialWeaponList = new ArrayList<>();
 	public List<UserWeaponData> NormalWeaponList = new ArrayList<>();
@@ -117,6 +119,10 @@ public class YouMissedThatOnePlugin extends Plugin
 			return;
 		}
 
+		// for debugging purposes, scuffed way but hey it works
+		DebugHpXpDrop = false;
+		DebugSpecialUsed = false;
+
 		if (player.getAnimation() == PlayingAnimationID)
 		{
 			PlayingAnimationFrame = player.getAnimationFrame();
@@ -148,6 +154,7 @@ public class YouMissedThatOnePlugin extends Plugin
 			}
 		}
 
+		// figure out what custom sound ID to play
 		if (SpecialUsed)
 		{
 			if (!SpecialWeaponList.isEmpty() && config.SpecialSoundsEnabled())
@@ -168,23 +175,6 @@ public class YouMissedThatOnePlugin extends Plugin
 								{
 									CustomSoundID = weapon.getOnHit();
 								}
-
-								if (config.EnableSoundSwap())
-								{
-									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
-									if (soundFile.exists())
-									{
-										soundManager.playCustomSound(soundFile);
-									}
-									else
-									{
-										client.playSoundEffect(CustomSoundID);
-									}
-								}
-								else
-								{
-									client.playSoundEffect(CustomSoundID);
-								}
 							}
 						}
 						else
@@ -198,23 +188,6 @@ public class YouMissedThatOnePlugin extends Plugin
 								else
 								{
 									CustomSoundID = weapon.getOnMiss();
-								}
-
-								if (config.EnableSoundSwap())
-								{
-									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
-									if (soundFile.exists())
-									{
-										soundManager.playCustomSound(soundFile);
-									}
-									else
-									{
-										client.playSoundEffect(CustomSoundID);
-									}
-								}
-								else
-								{
-									client.playSoundEffect(CustomSoundID);
 								}
 							}
 						}
@@ -242,23 +215,6 @@ public class YouMissedThatOnePlugin extends Plugin
 								{
 									CustomSoundID = weapon.getOnHit();
 								}
-
-								if (config.EnableSoundSwap())
-								{
-									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
-									if (soundFile.exists())
-									{
-										soundManager.playCustomSound(soundFile);
-									}
-									else
-									{
-										client.playSoundEffect(CustomSoundID);
-									}
-								}
-								else
-								{
-									client.playSoundEffect(CustomSoundID);
-								}
 							}
 						}
 						else
@@ -273,23 +229,6 @@ public class YouMissedThatOnePlugin extends Plugin
 								{
 									CustomSoundID = weapon.getOnMiss();
 								}
-
-								if (config.EnableSoundSwap())
-								{
-									File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
-									if (soundFile.exists())
-									{
-										soundManager.playCustomSound(soundFile);
-									}
-									else
-									{
-										client.playSoundEffect(CustomSoundID);
-									}
-								}
-								else
-								{
-									client.playSoundEffect(CustomSoundID);
-								}
 							}
 						}
 					}
@@ -297,9 +236,36 @@ public class YouMissedThatOnePlugin extends Plugin
 			}
 		}
 
-		// make hp xp drop and special attack used false
+		if (config.EnableSoundSwap())
+		{
+			File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
+			if (soundFile.exists())
+			{
+				soundManager.playCustomSound(soundFile);
+			}
+			else
+			{
+				if (CustomSoundID > -1)
+				{
+					client.playSoundEffect(CustomSoundID);
+				}
+			}
+		}
+		else
+		{
+			if (CustomSoundID > -1)
+			{
+				client.playSoundEffect(CustomSoundID);
+			}
+		}
+
+		// for debugging purposes, scuffed way but hey it works
+		DebugHpXpDrop = HpXpDrop;
+		DebugSpecialUsed = SpecialUsed;
+		// make hp xp drop and special attack used false and custom sound id -1
 		HpXpDrop = false;
 		SpecialUsed = false;
+		CustomSoundID = -1;
 
 	}
 

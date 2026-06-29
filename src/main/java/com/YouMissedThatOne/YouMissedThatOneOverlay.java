@@ -58,11 +58,11 @@ public class YouMissedThatOneOverlay extends OverlayPanel
                     .build());
             panelComponent.getChildren().add(LineComponent.builder()
                     .left("Hp xp (flashes): ")
-                    .right(String.valueOf(plugin.HpXpDrop))
+                    .right(String.valueOf(plugin.DebugHpXpDrop))
                     .build());
             panelComponent.getChildren().add(LineComponent.builder()
                     .left("Special used (flashes): ")
-                    .right(String.valueOf(plugin.SpecialUsed))
+                    .right(String.valueOf(plugin.DebugSpecialUsed))
                     .build());
 
         }
