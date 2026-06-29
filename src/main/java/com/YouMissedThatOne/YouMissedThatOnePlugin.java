@@ -236,12 +236,22 @@ public class YouMissedThatOnePlugin extends Plugin
 			}
 		}
 
-		if (config.EnableSoundSwap())
+		if (CustomSoundID != -1)
 		{
-			File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
-			if (soundFile.exists())
+			if (config.EnableSoundSwap())
 			{
-				soundManager.playCustomSound(soundFile);
+				File soundFile = new File(customSoundsDir, CustomSoundID + ".wav");
+				if (soundFile.exists())
+				{
+					soundManager.playCustomSound(soundFile);
+				}
+				else
+				{
+					if (CustomSoundID > -1)
+					{
+						client.playSoundEffect(CustomSoundID);
+					}
+				}
 			}
 			else
 			{
@@ -249,13 +259,6 @@ public class YouMissedThatOnePlugin extends Plugin
 				{
 					client.playSoundEffect(CustomSoundID);
 				}
-			}
-		}
-		else
-		{
-			if (CustomSoundID > -1)
-			{
-				client.playSoundEffect(CustomSoundID);
 			}
 		}
 
