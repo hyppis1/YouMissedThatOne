@@ -63,6 +63,7 @@ public class YouMissedThatOnePlugin extends Plugin
 	public int RandomizerMin = 0;
 	public int RandomizerMax = 10100;
 	private SoundManager soundManager;
+	private int lastHpXp = -1;
 
 	@Override
 	protected void startUp() throws Exception
@@ -441,13 +442,21 @@ public class YouMissedThatOnePlugin extends Plugin
 		return WeaponList;
 	}
 
+
 	@Subscribe
 	public void onStatChanged(StatChanged event)
 	{
 		// check if skill is hp
 		if (event.getSkill() == Skill.HITPOINTS)
 		{
-			HpXpDrop = true;
+			int currentXp = event.getXp();
+
+			if (lastHpXp != -1 && currentXp > lastHpXp)
+			{
+				HpXpDrop = true;
+			}
+
+			lastHpXp = currentXp;
 		}
 	}
 	@Subscribe
